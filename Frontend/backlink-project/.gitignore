@@ -1,0 +1,27 @@
+# --- BACKEND IGNORE RULES ---
+node_modules/
+.env
+logs/
+*.log
+pids/
+*.pid
+
+# OS and Editor Stuff
+.DS_Store
+.idea/
+.vscode/
+
+# Optional backend build folders
+dist/
+coverage/
+uploads/
+temp/
+
+# --- FRONTEND IGNORE RULES ---
+frontend/node_modules/
+frontend/.env
+frontend/build/
+frontend/.DS_Store
+frontend/.cache
+frontend/coverage/
+frontend/public/temp/

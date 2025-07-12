@@ -1,0 +1,25 @@
+class ApiError extends Error {
+    statusCode: number;
+    error: any[];
+    
+    constructor(
+        statusCode = 404,
+        message = "Something went wrong",
+        error: any[] = [],
+        stack = ""
+    ) {
+        super(message); // Call parent class constructor
+
+        this.statusCode = statusCode; // Assign status code
+        this.error = error; // Assign additional error details
+
+        
+        if (stack) {
+            this.stack = stack;
+        } else {
+            Error.captureStackTrace(this, this.constructor);
+        }
+    }
+}
+
+export default ApiError;
