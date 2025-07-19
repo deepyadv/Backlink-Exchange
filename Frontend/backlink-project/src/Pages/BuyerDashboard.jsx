@@ -3,11 +3,14 @@ import axios from 'axios';
 import { setOrders } from '../store/Order';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import MessageInbox from '../Component/MessageInbox';
 
 function BuyerDashboard() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const orders = useSelector((state) => state.order.orders);
+
+  const [chatUsers, setChatUsers] = useState([]);
 
   useEffect(() => {
     const fetchBuyerDetails = async () => {
@@ -26,9 +29,33 @@ function BuyerDashboard() {
     fetchBuyerDetails();
   }, [dispatch]);
 
+
+  useEffect(() => {
+    const fetchChatUsers = async () => {
+      try {
+        const res = await axios.post("http://localhost:3000/users/chat-users", {
+          withCredentials: true,
+        });
+        setChatUsers(res.data.users);
+      } catch (err) {
+        console.error("❌ Error fetching chat users", err);
+      }
+    };
+
+    fetchChatUsers();
+  }, []);
+
+  
+  const handleSelectUser = (user) => {
+    navigate(`/chat/${user._id}`);
+  };
+
   return (
     <div className="p-6 max-w-7xl mx-auto">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-6">🛒 Your Guest Post Orders</h2>
+      <h2 className="text-2xl font-semibold text-gray-800 mb-6">📥 Chat Inbox</h2>
+      <MessageInbox users={chatUsers} onSelectUser={handleSelectUser} />
+
+      <h2 className="text-2xl font-semibold text-gray-800 mt-10 mb-6">🛒 Your Guest Post Orders</h2>
 
       {orders.length === 0 ? (
         <p className="text-gray-600">No orders found.</p>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import socket from "../socket/socket";
 import axios from "axios";
 import { useSelector } from "react-redux";
@@ -6,16 +6,25 @@ import { useSelector } from "react-redux";
 const Chat = ({ receiverId }) => {
   const [message, setMessage] = useState("");
   const [allMessages, setAllMessages] = useState([]);
-  const userId = useSelector((state) => state.auth.userDate?._id);
+  const userId = useSelector((state) => state.auth.userData?._id);
+  const chatContainerRef = useRef(null);
 
+  
   useEffect(() => {
-  if (userId) {
-    console.log("🔗 Emitting join event with userId:", userId); 
-    socket.emit("join", userId);
-  }
-}, [userId]);
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  }, [allMessages]);
 
+ 
+  useEffect(() => {
+    if (userId) {
+      socket.emit("join", userId);
+    }
+  }, [userId]);
 
+  
   useEffect(() => {
     const fetchMessages = async () => {
       try {
@@ -24,7 +33,8 @@ const Chat = ({ receiverId }) => {
           { receiverId },
           { withCredentials: true }
         );
-        setAllMessages(res.data.messages);
+        const sorted = sortByCreatedAt(res.data.messages);
+        setAllMessages(sorted);
       } catch (err) {
         console.error("❌ Message fetch failed", err);
       }
@@ -33,54 +43,88 @@ const Chat = ({ receiverId }) => {
     if (receiverId) fetchMessages();
   }, [receiverId]);
 
+ 
   useEffect(() => {
     const handleReceiveMessage = (msg) => {
-      setAllMessages((prev) => [...prev, msg]);
+      setAllMessages((prev) => sortByCreatedAt([...prev, msg]));
     };
 
     socket.on("receiveMessage", handleReceiveMessage);
     return () => socket.off("receiveMessage", handleReceiveMessage);
   }, []);
 
+ 
+  useEffect(() => {
+    const markAsRead = async () => {
+      try {
+        await axios.patch(
+          "http://localhost:3000/users/mark-read",
+          { withUserId: receiverId },
+          { withCredentials: true }
+        );
+      } catch (err) {
+        console.error("Failed to mark as read", err);
+      }
+    };
+
+    if (receiverId) markAsRead();
+  }, [receiverId]);
+
   const handleSend = () => {
-    console.log("🔼 Sending message:", message);
     if (!message.trim() || !userId || !receiverId) return;
 
-    socket.emit("sendMessage", {
+    const newMsg = {
       sender: userId,
       receiver: receiverId,
-      content: message,
-    });
+      content: message.trim(),
+      createdAt: new Date().toISOString(), 
+    };
 
-    setMessage(""); // Clear input only
+    setAllMessages((prev) => sortByCreatedAt([...prev, newMsg]));
+    socket.emit("sendMessage", newMsg);
+    setMessage("");
+  };
+
+  
+  const sortByCreatedAt = (messages) => {
+    return [...messages].sort(
+      (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+    );
   };
 
   return (
-    <div className="chat-container max-w-md">
-      <div className="messages h-64 overflow-y-auto bg-gray-100 p-3 rounded mb-2">
+    <div className="max-w-md w-full bg-[#1e1e2f] text-white shadow-lg rounded-lg p-4">
+      
+      <div
+        className="h-64 overflow-y-auto flex flex-col gap-2 p-2"
+        ref={chatContainerRef}
+        style={{ scrollBehavior: "smooth" }}
+      >
         {allMessages.map((msg, index) => (
           <div
             key={index}
-            className={`p-2 rounded max-w-xs mb-2 ${
+            className={`px-4 py-2 rounded-xl max-w-[80%] text-sm break-words ${
               msg.sender === userId
-                ? "bg-blue-500 text-white ml-auto text-right"
-                : "bg-white text-gray-800 mr-auto text-left border"
+                ? "bg-blue-600 text-white self-end"
+                : "bg-gray-700 text-gray-200 self-start"
             }`}
           >
             {msg.content}
           </div>
         ))}
       </div>
-      <div className="flex gap-2">
+
+      {/* Input box */}
+      <div className="mt-4 flex">
         <input
-          className="flex-1 border rounded px-3 py-2"
+          className="flex-1 p-3 bg-[#2a2a40] text-white rounded-l-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          placeholder="Type a message..."
+          placeholder="Type your message..."
         />
         <button
           onClick={handleSend}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+          className="bg-blue-600 text-white px-4 py-2 rounded-r-lg hover:bg-blue-700 transition"
         >
           Send
         </button>

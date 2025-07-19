@@ -1,7 +1,7 @@
  import { User } from "../models/user.models.js";
  import jwt from "jsonwebtoken"
  import { website } from "../models/website.models.js";
- import { message } from "../models/message.model.js";
+ import { Message } from "../models/message.model.js";
  import { order, } from "../models/order.models.js";
  import {ApiResponse} from "../utils/apiResponse.js"
  import {uploadOnClodinary} from "../utils/cloudinary.js";
@@ -549,7 +549,7 @@ console.log("🛠 Razorpay secret:", process.env.RAZORPAY_KEY_SECRET);
         const senderId  = req.user._id;
         const { receiverId, content } = req.body
 
-        const newMsg  = await message.create({sender: senderId, reciver: receiverId, content})
+        const newMsg  = await Message.create({sender: senderId, reciver: receiverId, content})
 
         res.status(200).json({msg: "message send ", newMsg})
         
@@ -569,7 +569,7 @@ console.log("🛠 Razorpay secret:", process.env.RAZORPAY_KEY_SECRET);
       console.log("my id from token :", myId);
       console.log("user id from token :",  receiverId);
 
-      const messages  = await message.find({
+      const messages  = await Message.find({
         $or : [
            
           {sender: myId, receiver:  receiverId },
@@ -580,7 +580,7 @@ console.log("🛠 Razorpay secret:", process.env.RAZORPAY_KEY_SECRET);
 
       console.log(messages)
 
-      res.status(201).json({msg: "message send successfully", messages})
+      res.status(201).json({ messages })
   
     } catch (error) {
       res.status(502).json({msg: "failed to fetch message",})
@@ -589,35 +589,33 @@ console.log("🛠 Razorpay secret:", process.env.RAZORPAY_KEY_SECRET);
 
   }
 
-  const getChatUsersForLoggedInUser = async ( req, res ) => {
+  const getChatUsersForLoggedInUser = async (req, res) => {
+  try {
+    const myId = req.user._id.toString();
 
-    try {
+    const messages = await Message.find({
+      $or: [{ sender: myId }, { receiver: myId }],
+    }).sort({createdAt: 1});
 
-      const myId  = req.user._id;
+    const userIds = new Set();
 
-      const messages = await message.find({
-        $or: [
-          { sender: myId }, {  receiver: myId }
-        ]
-      });
+    messages.forEach((msg) => {
+      const senderId = msg.sender.toString();
+      const receiverId = msg.receiver.toString();
 
-      const userIds = new Set();
+      if (senderId !== myId) userIds.add(senderId);
+      if (receiverId !== myId) userIds.add(receiverId);
+    });
 
-      messages.forEach((message) =>{
+    const users = await User.find({ _id: { $in: [...userIds] } }).select("_id username");
 
-        if(message.sender.toString() !== userIds) userIds.add(message.sender.toString());
-        if(message.receiver.toString() !== userIds) userIds.add(message.receiver.toString());
-      });
+    res.status(200).json({ users });
+  } catch (error) {
+    console.error("❌ Error fetching chat users:", error);
+    res.status(500).json({ msg: "Failed to fetch chat users" });
+  }
+};
 
-      const users = await User.find({ _id: { $in: [...userIds] } }).select("_id username");
-
-      res.status(201).json({ users })
-      
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({msg: "failed to fetch message "})
-    }
-  };
 
   const userRole = async (req, res) => {
     try {
@@ -637,7 +635,10 @@ console.log("🛠 Razorpay secret:", process.env.RAZORPAY_KEY_SECRET);
       console.log(user)
   
       
-      const { accessToken, refreshToken } = generateAccessAndRefreshToken(req.user._id);
+      const { accessToken, refreshToken } = await generateAccessAndRefreshToken(req.user._id);
+
+      console.log("Access Token:", accessToken);
+    console.log("Refresh Token:", refreshToken);
   
       const options = {
         httpOnly: true,
@@ -801,6 +802,43 @@ const filterWebsites = async (req, res) => {
   }
 };
 
+const markMessagesAsRead = async (req, res) => {
+
+  try {
+    const { withUserId } = req.body;
+    const userId = req.user._id;
+
+    await Message.updateMany(
+      { sender: withUserId, receiver: userId, isRead: false },
+      { $set: { isRead: true } }
+    );
+
+    res.json({ success: true, msg: "Messages marked as read" });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: "Failed to mark messages", error });
+  }
+};
+
+const getUnreadCounts = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const unreadMessages = await Message.aggregate([
+      { $match: { receiver: userId, isRead: false } },
+      { $group: { _id: "$sender", count: { $sum: 1 } } },
+    ]);
+
+    const unreadCountMap = {};
+    unreadMessages.forEach(({ _id, count }) => {
+      unreadCountMap[_id.toString()] = count;
+    });
+
+    res.json(unreadCountMap);
+  } catch (error) {
+    res.status(500).json({ success: false, msg: "Failed to fetch unread counts", error });
+  }
+};
+
   
 
 
@@ -831,7 +869,10 @@ const filterWebsites = async (req, res) => {
         deleteListing,
         getAdminAnalytics,
         getMyWebsite,
-        filterWebsites 
+        filterWebsites,
+        markMessagesAsRead,
+        getUnreadCounts 
+
         
 
   }
@@ -840,4 +881,3 @@ const filterWebsites = async (req, res) => {
 
 
 
-  

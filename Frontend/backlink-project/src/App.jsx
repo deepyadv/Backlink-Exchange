@@ -18,6 +18,7 @@ import FAQs from './Pages/FAQs.jsx'
 import Adminpanel from './Pages/Adminpanel.jsx'
 import AdminAnalytics from './Pages/AdminAnalytics.jsx'
 import EditWebsiteInfo from './Pages/EditWebsiteInfo.jsx'
+import ChatPage from './Pages/ChatPages.jsx'
 
 function App() {
   return (
@@ -39,12 +40,12 @@ function App() {
       <Route path='contact-us' element={<ContactUs/>} />
       <Route path='about-us' element={<AboutUs/>} />
       <Route path='dashboard' element={<Dashboard/>} />
-      <Route path="/chat/:receiverId" element={<Chat />} />
+      {/* <Route path="/chat/:receiverId" element={<Chat />} /> */}
       <Route path="/faqs" element={<FAQs />} />
       <Route path="/admin-dashboard" element={<Adminpanel />} />
       <Route path="/admin-analytics" element={<AdminAnalytics />} />
       <Route path="/edit-website-info" element={<EditWebsiteInfo />} />
-
+      <Route path="/chat/:receiverId" element={<ChatPage />} />
       
     </Routes>
 

@@ -2,7 +2,7 @@ import {Router} from "express"
 import { userRegister, loginUser,logoutUser, refreshAccessToken, getCurrentUser, websiteInformation, getAllWebsites, changeDetails,
 createOrder, verifyPayment, getBuyerOrder, getSellerDashboard, checkIfSeller, sendMessage,
 getMessage, getChatUsersForLoggedInUser,userRole, getAllListing,
-deleteListing, getAdminAnalytics,getMyWebsite, filterWebsites } from "../controller/user.controller.js";
+deleteListing, getAdminAnalytics,getMyWebsite, filterWebsites,markMessagesAsRead,getUnreadCounts  } from "../controller/user.controller.js";
 import {verifyJwt} from "../middleware/auth.middleware.js"
 import {upload} from "../middleware/multer.middleware.js"
 import { isSeller } from "../middleware/isSeller.middleware.js";
@@ -38,6 +38,7 @@ router.route("/delete-website/:id").delete(verifyJwt, isAdmin, deleteListing);
 router.route("/analytics").get(verifyJwt, isAdmin, getAdminAnalytics );
 router.route("/seller-websites").get(verifyJwt, getMyWebsite );
 router.route("/filter").get(verifyJwt, filterWebsites );
-
+router.route("/mark-read").patch(verifyJwt, markMessagesAsRead);
+router.route("/unread-count").get(verifyJwt, getUnreadCounts);
 
 export {router}

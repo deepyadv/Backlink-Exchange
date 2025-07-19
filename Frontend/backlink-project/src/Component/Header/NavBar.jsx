@@ -1,4 +1,4 @@
- import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
@@ -12,11 +12,27 @@ function Navbar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  // Handle scroll styling
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 2);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // ✅ Refetch profile on mount if missing
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const res = await axios.get("http://localhost:3000/users/get-current-user", { withCredentials: true });
+        dispatch(login(res.data));
+      } catch (err) {
+        console.log("❌ Failed to refetch user:", err);
+      }
+    };
+    if (isAuthenticated && !user?.role) {
+      fetchProfile();
+    }
+  }, [dispatch, isAuthenticated, user?.role]);
 
   const handleLogout = async () => {
     try {
@@ -34,7 +50,10 @@ function Navbar() {
       alert(res.data.msg);
 
       const profile = await axios.get("http://localhost:3000/users/get-current-user", { withCredentials: true });
-      dispatch(login(profile.data)); // update redux store
+      dispatch(login(profile.data.user)); 
+
+      
+      setTimeout(() => setDropdownOpen(false), 150);
     } catch (error) {
       console.log("Switch role failed", error);
     }
@@ -56,13 +75,11 @@ function Navbar() {
   ];
 
   return (
-    <div
-      className={`sticky top-0 z-50 transition-colors duration-300 ${
-        isScrolled
-          ? "bg-black/60 backdrop-blur-md shadow-md border-b border-gray-700"
-          : "bg-transparent"
-      }`}
-    >
+    <div className={`sticky top-0 z-50 transition-colors duration-300 ${
+      isScrolled
+        ? "bg-black/60 backdrop-blur-md shadow-md border-b border-gray-700"
+        : "bg-transparent"
+    }`}>
       <div className="navbar text-white max-w-screen-2xl container mx-auto md:px-20 px-4">
         <div className="navbar-start">
           <Link to="/" className="font-bold text-xl text-white">LinkoBack</Link>
@@ -77,17 +94,15 @@ function Navbar() {
         </div>
 
         <div className="navbar-end space-x-3 relative">
-          {navItems
-            .filter((item) => item.show)
-            .map(({ name, slug, className }) => (
-              <button
-                key={name}
-                onClick={() => navigate(slug)}
-                className={`px-4 py-2 rounded font-bold border-none transition duration-200 ${className}`}
-              >
-                {name}
-              </button>
-            ))}
+          {navItems.filter((item) => item.show).map(({ name, slug, className }) => (
+            <button
+              key={name}
+              onClick={() => navigate(slug)}
+              className={`px-4 py-2 rounded font-bold border-none transition duration-200 ${className}`}
+            >
+              {name}
+            </button>
+          ))}
 
           {isAuthenticated && user?.email && (
             <div className="relative">
@@ -99,10 +114,10 @@ function Navbar() {
               </button>
 
               {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-56 bg-white text-black rounded shadow-lg py-2 z-50">
+                <div className="absolute right-0 mt-2 w-56 bg-white text-black rounded shadow-lg py-2 z-50 transition-all duration-200">
                   <div className="px-4 py-2 border-b font-medium">
                     {user.email}
-                    <div className="text-sm text-gray-600">Role: {user.role}</div>
+                    <div className="text-sm text-gray-600">Role: <strong>{user.role}</strong></div>
                   </div>
 
                   <button
@@ -116,16 +131,13 @@ function Navbar() {
                   </button>
 
                   <button
-                    onClick={() => {
-                      handleSwitchRole();
-                      setDropdownOpen(false);
-                    }}
+                    onClick={handleSwitchRole}
                     className="w-full text-left px-4 py-2 hover:bg-gray-100"
                   >
                     Switch Role
                   </button>
 
-                  {user?.role === 'admin' && (
+                  {user?.role === "admin" && (
                     <button
                       onClick={() => navigate("/admin-dashboard")}
                       className="w-full text-left px-4 py-2 hover:bg-gray-100"

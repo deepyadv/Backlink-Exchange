@@ -9,45 +9,37 @@ function SwitchRole() {
   const navigate = useNavigate();
   const dispatch  = useDispatch()
 
-  const handleSwitch = async () => {
+  const handleSwitchRole = async () => {
   try {
-    const res = await axios.patch(
-      'http://localhost:3000/users/switch-role',
-      {},
-      { withCredentials: true }
-    );
+    const res = await axios.patch("http://localhost:3000/users/switch-role", {}, {
+      withCredentials: true
+    });
 
     alert(res.data.msg);
 
     
-    const profileRes = await axios.get("http://localhost:3000/users/profile", {
-      withCredentials: true,
-    });
-
-    // 
-    dispatch(login(profileRes.data));
+    dispatch(login(res.data.updatedUser));
 
     
+    setTimeout(() => {
+      if (res.data.role === 'buyer') {
+        navigate('/buyer-dashboard');
+      } else {
+        navigate('/seller-dashboard');
+      }
+    }, 200); 
 
-    
-    const newRole = profileRes.data.role;
-    if (newRole === 'buyer') {
-      navigate('/buyer-dashboard');
-    } else if (newRole === 'seller') {
-      navigate('/seller-dashboard');
-    }
-
-    
   } catch (error) {
-    console.error('Role switch error:', error);
+    console.log("Switch role failed", error);
     alert("Failed to switch role. Please try again.");
   }
 };
 
 
+
   return (
     <button
-      onClick={handleSwitch}
+      onClick={handleSwitchRole}
       className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded shadow transition"
     >
       Switch Role

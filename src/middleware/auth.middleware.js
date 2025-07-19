@@ -1,46 +1,4 @@
-    //   import jwt from "jsonwebtoken"
-    //   import { User } from "../models/user.models.js"
-      
-      
-    //    const verifyJwt = async ( req, res, next ) =>{
-
-    //             try {
-    //                 const token  = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "")
-    
-    //                if(!token){
-    
-    //                 throw new Error("Invalid token access")
-    //                }            
-                   
-                   
-    //                let decodedToken  = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
-    
-    //                if(!decodedToken){
-    //                 throw new Error("token not get")
-    //                }
-    
-    //                let user  = await User.findById(decodedToken._id)
-    
-    //                if(!user){
-    
-    //                 throw new Error("Invalit access token")
-    //                }
-    //                console.log ("token", req.cookies.accessToken)
-    //                req.user = user;
-    //                next()
-    
-    //             } catch (error) {
-    //                 throw new Error(error.message || "access token is invalid")
-    //             }
-    //    }
-
-
-
-
-
-    //    export {verifyJwt}
-
-    import jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import { User } from "../models/user.models.js";
 
 const verifyJwt = async (req, res, next) => {
