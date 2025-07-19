@@ -167,7 +167,17 @@ function SellerDashboard() {
           {orders.map((order) => (
             <li key={order._id} className="border p-3 rounded bg-gray-900 shadow">
               <p><strong>Buyer:</strong> {order.buyer?.username}</p>
-              <p><strong>Website:</strong> {order.website?.url}</p>
+              <p>
+        <strong>Buyer Link:</strong>{' '}
+        <a
+          href={order.buyerLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-400 underline"
+        >
+          {order.buyerLink}
+        </a>
+      </p>
               <p><strong>Amount:</strong> ₹{order.paymentAmount}</p>
               <p><strong>Status:</strong> {order.status}</p>
 

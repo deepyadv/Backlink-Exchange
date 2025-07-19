@@ -104,7 +104,8 @@ function AllWebsites() {
     <div className="min-h-screen bg-gray-100 p-6 text-black">
       <h1 className="text-3xl font-bold text-center mb-8">All Website Listings</h1>
 
-      <  FilterWebsites onfilterchange ={ setFilters }/>
+      <FilterWebsites onfilterchange={setWebsites} />
+
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {websites.map((site) => (
           <div key={site._id} className="bg-white p-4 rounded shadow relative">

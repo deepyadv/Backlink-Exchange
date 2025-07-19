@@ -9,10 +9,12 @@ const Chat = ({ receiverId }) => {
   const userId = useSelector((state) => state.auth.userDate?._id);
 
   useEffect(() => {
-    if (userId) {
-      socket.emit("join", userId);
-    }
-  }, [userId]);
+  if (userId) {
+    console.log("🔗 Emitting join event with userId:", userId); 
+    socket.emit("join", userId);
+  }
+}, [userId]);
+
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -41,6 +43,7 @@ const Chat = ({ receiverId }) => {
   }, []);
 
   const handleSend = () => {
+    console.log("🔼 Sending message:", message);
     if (!message.trim() || !userId || !receiverId) return;
 
     socket.emit("sendMessage", {

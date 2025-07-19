@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { setOrders } from '../store/Order';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 function BuyerDashboard() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const orders = useSelector((state) => state.order.orders);
 
   useEffect(() => {
@@ -40,6 +42,7 @@ function BuyerDashboard() {
                 <th className="px-6 py-3 text-left text-sm font-bold uppercase tracking-wider">Seller</th>
                 <th className="px-6 py-3 text-left text-sm font-bold uppercase tracking-wider">Status</th>
                 <th className="px-6 py-3 text-left text-sm font-bold uppercase tracking-wider">Created</th>
+                <th className="px-6 py-3 text-left text-sm font-bold uppercase tracking-wider">Action</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -64,6 +67,16 @@ function BuyerDashboard() {
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-800">
                     {new Date(order.createdAt).toLocaleDateString()}
+                  </td>
+                  <td className="px-6 py-4 text-sm">
+                    {order.status === 'complete' && order.seller?._id && (
+                      <button
+                        onClick={() => navigate(`/chat/${order.seller._id}`)}
+                        className="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1 rounded"
+                      >
+                        Chat with Seller
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}
