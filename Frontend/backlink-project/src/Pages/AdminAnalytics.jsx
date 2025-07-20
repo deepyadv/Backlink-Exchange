@@ -14,7 +14,7 @@ function AdminAnalytics() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/users/analytics", {
+        const res = await axios.get("https://linkoback.onrender.com/users/analytics", {
           withCredentials: true,
         });
         setStats(res.data);
