@@ -8,7 +8,7 @@ function EditWebsiteInfo() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/users/seller-websites", { withCredentials: true })
+      .get("https://linkoback.onrender.com/users/seller-websites", { withCredentials: true })
       .then((res) => setWebsites(res.data.websites))
       .catch((err) => console.error("Error fetching:", err));
   }, []);
@@ -27,7 +27,7 @@ function EditWebsiteInfo() {
 
     try {
       await axios.put(
-        "http://localhost:3000/users/update-user-details",
+        "https://linkoback.onrender.com/users/update-user-details",
         {
           websiteid: id,
           price: website.price,
