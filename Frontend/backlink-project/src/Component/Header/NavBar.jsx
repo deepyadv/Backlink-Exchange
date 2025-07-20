@@ -23,7 +23,7 @@ function Navbar() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/users/get-current-user", { withCredentials: true });
+        const res = await axios.get("https://linkoback.onrender.com/users/get-current-user", { withCredentials: true });
         dispatch(login(res.data));
       } catch (err) {
         console.log("❌ Failed to refetch user:", err);
@@ -36,7 +36,7 @@ function Navbar() {
 
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:3000/users/logout", {}, { withCredentials: true });
+      await axios.post("https://linkoback.onrender.com/users/logout", {}, { withCredentials: true });
       dispatch(logout());
       navigate("/login");
     } catch (error) {
@@ -46,10 +46,10 @@ function Navbar() {
 
   const handleSwitchRole = async () => {
     try {
-      const res = await axios.patch("http://localhost:3000/users/switch-role", {}, { withCredentials: true });
+      const res = await axios.patch("https://linkoback.onrender.com/users/switch-role", {}, { withCredentials: true });
       alert(res.data.msg);
 
-      const profile = await axios.get("http://localhost:3000/users/get-current-user", { withCredentials: true });
+      const profile = await axios.get("https://linkoback.onrender.com/users/get-current-user", { withCredentials: true });
       dispatch(login(profile.data.user)); 
 
       
