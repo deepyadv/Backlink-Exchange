@@ -16,7 +16,7 @@ function BuyerDashboard() {
     const fetchBuyerDetails = async () => {
       try {
         const response = await axios.post(
-          'http://localhost:3000/users/user-order-details',
+          'https://linkoback.onrender.com/users/user-order-details',
           {},
           { withCredentials: true }
         );
@@ -33,7 +33,7 @@ function BuyerDashboard() {
   useEffect(() => {
     const fetchChatUsers = async () => {
       try {
-        const res = await axios.post("http://localhost:3000/users/chat-users", {
+        const res = await axios.post("https://linkoback.onrender.com/users/chat-users", {
           withCredentials: true,
         });
         setChatUsers(res.data.users);
