@@ -51,7 +51,7 @@ function WebsiteListing() {
     });
 
     try {
-      await axios.post('http://localhost:3000/users/website-details', formData, {
+      await axios.post('https://linkoback.onrender.com/users/website-details', formData, {
         withCredentials: true,
         headers: {
           'Content-Type': 'multipart/form-data',
