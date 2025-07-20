@@ -10,7 +10,7 @@ const SellerInbox = () => {
   useEffect(() => {
     const fetchBuyers = async () => {
       try {
-        const res = await axios.post("http://localhost:3000/users/chat-users", {}, {
+        const res = await axios.post("https://linkoback.onrender.com/users/chat-users", {}, {
           withCredentials: true,
         });
         setBuyers(res.data.users);
