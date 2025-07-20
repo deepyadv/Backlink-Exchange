@@ -9,7 +9,7 @@ export const startPayment = async ({ websiteId,  buyerLink, onSuccess }) => {
 
     
     const { data  } = await axios.post(
-      'http://localhost:3000/users/order-Create',
+      'https://linkoback.onrender.com/users/order-Create',
       {  websiteId,
         buyerLink,
         isPaid: false,  },
@@ -42,7 +42,7 @@ export const startPayment = async ({ websiteId,  buyerLink, onSuccess }) => {
 
         // 3. Verify signature & create order in DB
         const { data } = await axios.post(
-          'http://localhost:3000/users/verify-payment',
+          'https://linkoback.onrender.com/users/verify-payment',
           {
             razorpay_order_id,
             razorpay_payment_id,
