@@ -22,7 +22,7 @@ function FilterWebsites({ onfilterchange }) {
   const handleSubmit = async () => {
     const params = new URLSearchParams(filters);
     try {
-      const res = await axios.get(`http://localhost:3000/users/filter?${params}`, {
+      const res = await axios.get(`https://linkoback.onrender.com/users/filter?${params}`, {
         withCredentials: true,
       });
       if (onfilterchange) onfilterchange(res.data.websites); 
