@@ -21,13 +21,13 @@ function Login() {
 
     try {
 
-       const res = await axios.post('http://localhost:3000/users/login', {
+       const res = await axios.post('https://linkoback.onrender.com/users/login', {
         username,
         password
       })
       dispatch(login(res.data.user))
       
-      const {data} = await axios.post("http://localhost:3000/users/is-seller", { withCredentials: true})
+      const {data} = await axios.post("https://linkoback.onrender.com/users/is-seller", { withCredentials: true})
 
       if(data.isSeller){
 
