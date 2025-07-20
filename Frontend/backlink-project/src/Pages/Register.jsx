@@ -15,7 +15,7 @@ function Register() {
     e.preventDefault();
 
     try {
-      await axios.post('http://localhost:3000/users/register', {
+      await axios.post('https://linkoback.onrender.com/users/register', {
         name,
         email,
         password,
