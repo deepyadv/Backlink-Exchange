@@ -11,7 +11,7 @@ function SwitchRole() {
 
   const handleSwitchRole = async () => {
   try {
-    const res = await axios.patch("http://localhost:3000/users/switch-role", {}, {
+    const res = await axios.patch("https://linkoback.onrender.com/users/switch-role", {}, {
       withCredentials: true
     });
 
