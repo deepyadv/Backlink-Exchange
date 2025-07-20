@@ -29,7 +29,7 @@ const Chat = ({ receiverId }) => {
     const fetchMessages = async () => {
       try {
         const res = await axios.post(
-          "http://localhost:3000/users/messages",
+          "https://linkoback.onrender.com/users/messages",
           { receiverId },
           { withCredentials: true }
         );
@@ -58,7 +58,7 @@ const Chat = ({ receiverId }) => {
     const markAsRead = async () => {
       try {
         await axios.patch(
-          "http://localhost:3000/users/mark-read",
+          "https://linkoback.onrender.com/users/mark-read",
           { withUserId: receiverId },
           { withCredentials: true }
         );
