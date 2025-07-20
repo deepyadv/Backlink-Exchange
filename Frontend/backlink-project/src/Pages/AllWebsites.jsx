@@ -70,7 +70,7 @@ function AllWebsites() {
     const fetchWebsites = async () => {
       try {
         const res = await axios.post(
-          'http://localhost:3000/users/get-All-websites',
+          'https://linkoback.onrender.com/users/get-All-websites',
           {},
           { withCredentials: true }
         );
