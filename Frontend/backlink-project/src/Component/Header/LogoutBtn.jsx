@@ -41,7 +41,7 @@ function LogoutBtn() {
 
   const LogOutHandler = async () => {
     try {
-      await axios.post('http://localhost:3000/users/logout', {}, { withCredentials: true });
+      await axios.post('https://linkoback.onrender.com/users/logout', {}, { withCredentials: true });
       dispatch(logout());
       navigate('/login');
     } catch (error) {
