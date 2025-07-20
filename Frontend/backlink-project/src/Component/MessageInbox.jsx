@@ -7,7 +7,7 @@ const MessageInbox = ({ users, onSelectUser }) => {
   useEffect(() => {
     const fetchUnread = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/users/unread-count", {
+        const res = await axios.get("https://linkoback.onrender.com/users/unread-count", {
           withCredentials: true,
         });
         setUnreadCount(res.data);
