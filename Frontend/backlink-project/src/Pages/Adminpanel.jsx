@@ -16,7 +16,7 @@ function Adminpanel() {
 
             try {
 
-                const res  = await axios.get ('http://localhost:3000/users/get-all-website',{ withCredentials: true  })
+                const res  = await axios.get ('https://linkoback.onrender.com/users/get-all-website',{ withCredentials: true  })
 
                 setListing(res.data.listings)
                 
@@ -32,7 +32,7 @@ function Adminpanel() {
 
             try {
 
-                await axios.delete(`http://localhost:3000/users/delete-website/${id}`, { withCredentials: true})
+                await axios.delete(`https://linkoback.onrender.com/users/delete-website/${id}`, { withCredentials: true})
 
                 setListing((prevListings) => prevListings.filter((item) => item._id !== id));
                 
