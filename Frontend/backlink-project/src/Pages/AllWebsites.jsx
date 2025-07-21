@@ -54,7 +54,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { startPayment } from '../services/razorpay';
+import { startPayment } from '../services/Razorpay.jsx';
 import Chat from "../Component/chat"
 import { useNavigate } from 'react-router-dom';
 import FilterWebsites from '../Pages/FilterWebsites';
