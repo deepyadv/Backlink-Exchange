@@ -15,7 +15,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: process.env.CORS_ORIGIN, // Frontend origin
+    origin: "https://backlink-exchange-six.vercel.app", // Frontend origin
     credentials: true,
   },
 });
