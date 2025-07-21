@@ -16,7 +16,6 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin:  "https://backlink-exchange-git-main-successmantra46-gmailcoms-projects.vercel.app",
-  "https://backlink-exchange-3u4ov9itg-successmantra46-gmailcoms-projects.vercel.app",
     credentials: true,
   },
 });
