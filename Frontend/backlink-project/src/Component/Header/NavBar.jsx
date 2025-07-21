@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { logout, login } from "../../store/Auth.Store";
 
-function Navbar() {
+function NavBar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const isAuthenticated = useSelector((state) => state.auth.status);
@@ -162,4 +162,4 @@ function Navbar() {
   );
 }
 
-export default Navbar;
+export default NavBar;
