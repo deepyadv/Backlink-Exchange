@@ -1,3 +1,4 @@
+
 import express from "express"
 import CookieParser from "cookie-parser"
 import cors from "cors"
@@ -7,7 +8,9 @@ const app = express()
 
 app.use(cors({
 
-  origin: "https://backlink-exchange-six.vercel.app",
+  origin: "https://backlink-exchange-git-main-successmantra46-gmailcoms-projects.vercel.app",
+  "https://backlink-exchange-3u4ov9itg-successmantra46-gmailcoms-projects.vercel.app"
+    
   credentials: true
 }))
 
