@@ -115,7 +115,7 @@
               console.log(user)
     
               if(!user){
-                throw new Error ( "username or email is not register" )
+                throw new Error ( "username or email is not registered" )
               };
     
               // password checking
@@ -139,7 +139,8 @@
                 const options  = {
     
                     httpOnly: true,
-                    secure: true
+                    secure: true,
+                    sameSite: "None"
                 }
     
                 return res
