@@ -7,7 +7,7 @@ const app = express()
 
 app.use(cors({
 
-  origin: "https://backlink-exchange-six.vercel.app",
+  origin: process.env.CORS_ORIGIN,
   credentials: true
 }))
 
