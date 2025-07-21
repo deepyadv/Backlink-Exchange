@@ -23,8 +23,9 @@ function Login() {
 
        const res = await axios.post('https://linkoback.onrender.com/users/login', {
         username,
-        password
-      })
+        password,
+         
+      },{ withCredentials: true })
       dispatch(login(res.data.user))
       
       const { data } = await axios.post(
