@@ -10,9 +10,11 @@ function Register() {
   const [password, setPassword] = useState('');
   const [username, setUserName] = useState('');
   const [role, setRole] = useState('buyer');
+  const [error, setError] = useState('');
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    setError('');
 
     try {
       await axios.post('https://linkoback.onrender.com/users/register', {
@@ -26,6 +28,7 @@ function Register() {
       navigate('/login');
     } catch (err) {
       console.error(err.response?.data || err.message);
+      setError(err.response?.data?.error || 'Something went wrong');
     }
   };
 
@@ -116,6 +119,9 @@ function Register() {
           >
             Register
           </button>
+
+                  {error && <p className="text-red-500 mt-4 text-center">{error}</p>}
+
 
           <p className="text-sm text-center mt-6 text-gray-400">
             Already have an account?{' '}
