@@ -11,12 +11,14 @@ function Login() {
   const [ username, setuserName] = useState("");
   const [ password, setPassword] = useState("");
   const [ error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   axios.defaults.withCredentials = true;
 
   const loginHandle = async (e) => {
 
     e.preventDefault();
+    setLoading(true);
     setError("");
 
 
@@ -48,12 +50,15 @@ function Login() {
     } catch (err) {
       console.error(err.response?.data?.msg || err.message)
       setError( err.response?.data?.msg || "Invalid username or password")
-    }
+    } finally {
+    setLoading(false); 
   }
 
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-950 text-white">
+      {loading && <p className="text-sm text-center text-blue-400">Logging in...</p>}
+
       <div className="w-full max-w-md bg-gray-900 p-8 rounded-lg shadow-lg relative">
         
         
