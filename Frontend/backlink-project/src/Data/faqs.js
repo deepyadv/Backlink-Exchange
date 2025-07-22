@@ -1,5 +1,14 @@
 const faqs = [
-    // General
+
+    {
+        question: "hello",
+        answer: "hello, how can i help you"
+    },
+
+    {
+        question: "How are you",
+        answer: " I am fine, plese tell about you"
+    },
     {
       question: "What is LinkoBack?",
       answer: "LinkoBack is a guest posting marketplace where buyers can purchase high-quality backlinks and sellers can list their websites for guest post opportunities."
