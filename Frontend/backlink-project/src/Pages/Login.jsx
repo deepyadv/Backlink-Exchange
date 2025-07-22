@@ -17,6 +17,7 @@ function Login() {
   const loginHandle = async (e) => {
 
     e.preventDefault();
+    setError("");
 
 
     try {
@@ -45,8 +46,8 @@ function Login() {
       }
       
     } catch (err) {
-      console.error(err.response?.data || err.message)
-      setError("Invalid username or password")
+      console.error(err.response?.data?.msg || err.message)
+      setError( err.response?.data?.msg || "Invalid username or password")
     }
   }
 
