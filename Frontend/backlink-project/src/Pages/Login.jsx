@@ -98,6 +98,7 @@ function Login() {
           >
             Login
           </button>
+          {error && <p style={{ color: "red" }}>{error}</p>}
 
           {/* Account Link */}
           <p className="text-sm text-center mt-6 text-gray-400">
