@@ -11,10 +11,12 @@ function Register() {
   const [username, setUserName] = useState('');
   const [role, setRole] = useState('buyer');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleRegister = async (e) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
 
     try {
       await axios.post('https://linkoback.onrender.com/users/register', {
@@ -22,13 +24,15 @@ function Register() {
         email,
         password,
         username,
-        role
+        role,
       });
 
       navigate('/login');
     } catch (err) {
       console.error(err.response?.data || err.message);
-      setError(err.response?.data?.error || 'Something went wrong');
+      setError(err.response?.data?.error || 'Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -45,12 +49,19 @@ function Register() {
         <h3 className="text-3xl font-bold text-center mb-8">Register</h3>
 
         <form className="space-y-6" onSubmit={handleRegister}>
+          {loading && (
+            <p className="text-sm text-center text-blue-400">Registering...</p>
+          )}
+          {error && (
+            <p className="text-sm text-center text-red-500">{error}</p>
+          )}
+
           {/* Name */}
           <div className="flex flex-col">
             <label className="text-sm font-medium mb-2">Name</label>
             <input
               onChange={(e) => setName(e.target.value)}
-              name="name"
+              value={name}
               type="text"
               placeholder="Enter your name"
               className="input input-bordered w-full bg-gray-800 text-white border-gray-700"
@@ -63,7 +74,7 @@ function Register() {
             <label className="text-sm font-medium mb-2">Email</label>
             <input
               onChange={(e) => setEmail(e.target.value)}
-              name="email"
+              value={email}
               type="email"
               placeholder="Enter your email"
               className="input input-bordered w-full bg-gray-800 text-white border-gray-700"
@@ -76,7 +87,7 @@ function Register() {
             <label className="text-sm font-medium mb-2">Password</label>
             <input
               onChange={(e) => setPassword(e.target.value)}
-              name="password"
+              value={password}
               type="password"
               placeholder="Enter your password"
               className="input input-bordered w-full bg-gray-800 text-white border-gray-700"
@@ -89,7 +100,7 @@ function Register() {
             <label className="text-sm font-medium mb-2">Username</label>
             <input
               onChange={(e) => setUserName(e.target.value)}
-              name="username"
+              value={username}
               type="text"
               placeholder="Choose a username"
               className="input input-bordered w-full bg-gray-800 text-white border-gray-700"
@@ -97,32 +108,34 @@ function Register() {
             />
           </div>
 
+          {/* Role */}
           <div className="flex flex-col">
-  <label className="text-sm font-medium mb-2">Role</label>
-  <select
-    name="role"
-    value={role}
-    onChange={(e) => setRole(e.target.value)}
-    className="input input-bordered w-full bg-gray-800 text-white border-gray-700"
-    required
-  >
-    <option value="buyer">Buyer</option>
-    <option value="seller">Seller</option>
-  </select>
-</div>
+            <label className="text-sm font-medium mb-2">Role</label>
+            <select
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              className="input input-bordered w-full bg-gray-800 text-white border-gray-700"
+              required
+            >
+              <option value="buyer">Buyer</option>
+              <option value="seller">Seller</option>
+            </select>
+          </div>
 
-
-          {/* Submit */}
+          {/* Register Button */}
           <button
             type="submit"
-            className="btn w-full bg-gradient-to-r from-green-600 to-lime-600 text-white font-semibold hover:bg-white hover:text-black border-none cursor-pointer"
+            disabled={loading}
+            className={`btn w-full font-semibold border-none cursor-pointer ${
+              loading
+                ? 'bg-gray-600 text-white'
+                : 'bg-gradient-to-r from-green-600 to-lime-600 text-white hover:bg-white hover:text-black'
+            }`}
           >
-            Register
+            {loading ? 'Please wait...' : 'Register'}
           </button>
 
-                  {error && <p className="text-red-500 mt-4 text-center">{error}</p>}
-
-
+          {/* Link to login */}
           <p className="text-sm text-center mt-6 text-gray-400">
             Already have an account?{' '}
             <Link to="/login" className="text-primary font-medium hover:underline">
@@ -135,4 +148,4 @@ function Register() {
   );
 }
 
-export {Register};
+export { Register };
